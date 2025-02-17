@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <title>Projects</title>
+    <title>Mental Math</title>
     <style>
        body {
           font-family: Arial, sans-serif;
@@ -31,11 +31,19 @@
     </style>
   </head>
   <body>
-    <div>
-      <p>quempty :(</p>
-      <p>(not for long)</p>
+
+    <div id="mathGame">
+    <button id="startGame">Start Mental Math Game</button>
+    <div id="gameContainer" style="display:none;">
+        <p id="question"></p>
+        <input type="number" id="answer" placeholder="Enter answer">
+        <button id="submit">Submit</button>
+        <p id="result"></p>
+        <p id="score"></p>
     </div>
-    <div class="menu-item"><a href="mental_math.html">mental math game</a></div>
-    <div class="back-button"><a href="menu.html">← back</a></div>
+</div>
+<script src="mental_math.js"></script>
+
+    <div class="back-button"><a href="projects.html">← back</a></div>
   </body>
 </html>
