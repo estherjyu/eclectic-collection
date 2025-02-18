@@ -11,6 +11,8 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          text-align: center;
+          padding: 20px;
        }
        .menu-item {
           margin: 15px 0;
@@ -23,7 +25,6 @@
        a:hover {
           color: #666;
        }
-
        .back-button {
          font-size: 16px;
          margin-top: 30px;
@@ -31,8 +32,34 @@
     </style>
   </head>
   <body>
-    <div id="mathGame">
-    <button id="startGame">Start Mental Math Game</button>
+    <h1>Mental Math Game</h1>
+
+    <!-- Game Settings -->
+    <label>Game Mode:</label>
+    <select id="modeSelect">
+        <option value="addition">Addition</option>
+        <option value="subtraction">Subtraction</option>
+        <option value="multiplication">Multiplication</option>
+        <option value="division">Division</option>
+    </select>
+
+    <label>Difficulty:</label>
+    <select id="difficultySelect">
+        <option value="1">Easy</option>
+        <option value="2">Medium</option>
+        <option value="3">Hard</option>
+        <option value="4">Expert</option>
+    </select>
+
+    <label>Number of Questions:</label>
+    <input type="number" id="numQuestions" value="5" min="1">
+
+    <label>Times Table (only for multiplication/division level 1):</label>
+    <input type="number" id="timesTable" placeholder="Enter a number">
+
+    <button id="startGame">Start Game</button>
+
+    <!-- Game Area -->
     <div id="gameContainer" style="display:none;">
         <p id="question"></p>
         <input type="number" id="answer" placeholder="Enter answer">
@@ -40,9 +67,11 @@
         <p id="result"></p>
         <p id="score"></p>
     </div>
-</div>
-<script src="mental_math.js" defer></script>
 
+    <!-- Link back -->
     <div class="back-button"><a href="projects.html">← back</a></div>
+
+    <!-- JavaScript File -->
+    <script src="mental_math.js" defer></script>
   </body>
 </html>
