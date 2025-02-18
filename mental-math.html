@@ -246,24 +246,24 @@
             const feedbackElement = document.getElementById('feedback');
             if (userAnswer === currentAnswer) {
                 score++;
-                feedbackElement.textContent = "Previous answer: Correct!";
+                feedbackElement.textContent = "Correct!";
                 feedbackElement.className = "feedback correct";
             } else {
-                feedbackElement.textContent = `Previous answer: Incorrect. The answer was ${currentAnswer}`;
+                feedbackElement.textContent = `Incorrect. The answer was ${currentAnswer}`;
                 feedbackElement.className = "feedback incorrect";
             }
             feedbackElement.style.display = "block";
 
-            document.getElementById('answerInput').value = '';
-
-            if (questionCount + 1 === totalQuestions) {
-                questionCount++;
-                showResults();
-            } else {
-                questionCount++;
-                generateQuestion();
-                updateProgress();
-            }
+            // Wait 1.5 seconds before moving to next question
+            setTimeout(() => {
+                feedbackElement.style.display = "none";
+                if (questionCount === totalQuestions) {
+                    showResults();
+                } else {
+                    generateQuestion();
+                    updateProgress();
+                }
+            }, 1000);
 
             questionCount++;
             document.getElementById('answerInput').value = '';
