@@ -1,77 +1,284 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <title>Mental Math</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mental Math Game</title>
     <style>
-       body {
-          font-family: Arial, sans-serif;
-          height: 100vh;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-          padding: 20px;
-       }
-       .menu-item {
-          margin: 15px 0;
-       }
-       a {
-          text-decoration: none;
-          color: black;
-          font-size: 20px;
-       }
-       a:hover {
-          color: #666;
-       }
-       .back-button {
-         font-size: 16px;
-         margin-top: 30px;
-       }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .setup-section {
+            margin-bottom: 20px;
+        }
+        .game-section {
+            display: none;
+            text-align: center;
+        }
+        .results-section {
+            display: none;
+            text-align: center;
+        }
+        .question {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 100px;
+            margin: 10px;
+        }
+        .mode-button {
+            background-color: #2196F3;
+        }
+        .mode-button.selected {
+            background-color: #0b7dda;
+        }
+        .difficulty-button {
+            background-color: #ff9800;
+        }
+        .difficulty-button.selected {
+            background-color: #f57c00;
+        }
+        .back-button {
+            background-color: #666;
+            margin-top: 20px;
+        }
     </style>
-  </head>
-  <body>
-    <h1>Mental Math Game</h1>
+</head>
+<body>
+    <div class="container">
+        <!-- Setup Section -->
+        <div id="setupSection" class="setup-section">
+            <h2>Mental Math Game</h2>
 
-    <!-- Game Settings -->
-    <label>Game Mode:</label>
-    <select id="modeSelect">
-        <option value="addition">Addition</option>
-        <option value="subtraction">Subtraction</option>
-        <option value="multiplication">Multiplication</option>
-        <option value="division">Division</option>
-    </select>
+            <div class="mode-selection">
+                <h3>Select Mode:</h3>
+                <button class="mode-button" data-mode="1">Addition</button>
+                <button class="mode-button" data-mode="2">Subtraction</button>
+                <button class="mode-button" data-mode="3">Multiplication</button>
+                <button class="mode-button" data-mode="4">Division</button>
+            </div>
 
-    <label>Difficulty:</label>
-    <select id="difficultySelect">
-        <option value="1">Easy</option>
-        <option value="2">Medium</option>
-        <option value="3">Hard</option>
-        <option value="4">Expert</option>
-    </select>
+            <div class="difficulty-selection" style="margin-top: 20px;">
+                <h3>Select Difficulty:</h3>
+                <button class="difficulty-button" data-difficulty="1">Level 1</button>
+                <button class="difficulty-button" data-difficulty="2">Level 2</button>
+                <button class="difficulty-button" data-difficulty="3">Level 3</button>
+                <button class="difficulty-button" data-difficulty="4">Level 4</button>
+            </div>
 
-    <label>Number of Questions:</label>
-    <input type="number" id="numQuestions" value="5" min="1">
+            <div id="timesTableSection" style="display: none; margin-top: 20px;">
+                <h3>Select Times Table:</h3>
+                <input type="number" id="timesTableInput" min="1" max="12" placeholder="Enter number">
+            </div>
 
-    <label>Times Table (only for multiplication/division level 1):</label>
-    <input type="number" id="timesTable" placeholder="Enter a number">
+            <button id="startButton" style="margin-top: 20px;" disabled>Start Game</button>
+        </div>
 
-    <button id="startGame">Start Game</button>
+        <!-- Game Section -->
+        <div id="gameSection" class="game-section">
+            <div class="question" id="questionText"></div>
+            <input type="number" id="answerInput" placeholder="Your answer">
+            <button id="submitAnswer">Submit</button>
+            <div id="progress" style="margin-top: 10px;"></div>
+        </div>
 
-    <!-- Game Area -->
-    <div id="gameContainer" style="display:none;">
-        <p id="question"></p>
-        <input type="number" id="answer" placeholder="Enter answer">
-        <button id="submit">Submit</button>
-        <p id="result"></p>
-        <p id="score"></p>
+        <!-- Results Section -->
+        <div id="resultsSection" class="results-section">
+            <h2>Game Over!</h2>
+            <div id="scoreText"></div>
+            <div id="accuracyText"></div>
+            <div id="timeText"></div>
+            <button id="playAgain">Play Again</button>
+        </div>
+
+        <a href="menu.html"><button class="back-button">← Back to Menu</button></a>
     </div>
 
-    <!-- Link back -->
-    <div class="back-button"><a href="projects.html">← back</a></div>
+    <script>
+        let gameMode = null;
+        let difficulty = null;
+        let timesTable = null;
+        let score = 0;
+        let questionCount = 0;
+        let totalQuestions = 5;
+        let currentAnswer = null;
+        let startTime = null;
+        let times = [];
 
-    <!-- JavaScript File -->
-    <script src="mental_math.js" defer></script>
-  </body>
+        // Mode selection
+        document.querySelectorAll('.mode-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.mode-button').forEach(b => b.classList.remove('selected'));
+                button.classList.add('selected');
+                gameMode = parseInt(button.dataset.mode);
+                updateTimesTableVisibility();
+                checkStartEnabled();
+            });
+        });
+
+        // Difficulty selection
+        document.querySelectorAll('.difficulty-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.difficulty-button').forEach(b => b.classList.remove('selected'));
+                button.classList.add('selected');
+                difficulty = parseInt(button.dataset.difficulty);
+                updateTimesTableVisibility();
+                checkStartEnabled();
+            });
+        });
+
+        // Times table input
+        document.getElementById('timesTableInput').addEventListener('input', (e) => {
+            timesTable = parseInt(e.target.value);
+            checkStartEnabled();
+        });
+
+        function updateTimesTableVisibility() {
+            const timesTableSection = document.getElementById('timesTableSection');
+            timesTableSection.style.display =
+                (gameMode === 3 || gameMode === 4) && difficulty === 1 ? 'block' : 'none';
+        }
+
+        function checkStartEnabled() {
+            const startButton = document.getElementById('startButton');
+            startButton.disabled = !gameMode || !difficulty ||
+                ((gameMode === 3 || gameMode === 4) && difficulty === 1 && !timesTable);
+        }
+
+        // Game logic
+        function getNumbers() {
+            if (gameMode <= 2) { // Addition and Subtraction
+                if (difficulty === 1) return [Math.floor(Math.random() * 90 + 10), Math.floor(Math.random() * 9 + 1)];
+                if (difficulty === 2) return [Math.floor(Math.random() * 90 + 10), Math.floor(Math.random() * 90 + 10)];
+                if (difficulty === 3) return [Math.floor(Math.random() * 90 + 10), Math.floor(Math.random() * 900 + 100)];
+                if (difficulty === 4) return [Math.floor(Math.random() * 900 + 100), Math.floor(Math.random() * 900 + 100)];
+            } else { // Multiplication and Division
+                if (difficulty === 1) {
+                    const include = [3,4,5,6,7,8,9,12,13,14,15,16,17,18,19];
+                    return [timesTable, include[Math.floor(Math.random() * include.length)]];
+                }
+                if (difficulty === 2) return [Math.floor(Math.random() * 90 + 10), Math.floor(Math.random() * 8 + 2)];
+                if (difficulty === 3) return [Math.floor(Math.random() * 90 + 10), Math.floor(Math.random() * 90 + 10)];
+                if (difficulty === 4) return [Math.floor(Math.random() * 900 + 100), Math.floor(Math.random() * 8 + 2)];
+            }
+        }
+
+        function generateQuestion() {
+            let nums;
+            if (gameMode === 4 && difficulty === 1) {
+                const factor = Math.floor(Math.random() * 12 + 1);
+                nums = [timesTable * factor, timesTable];
+            } else {
+                nums = getNumbers();
+            }
+
+            const operator = gameMode === 1 ? '+' :
+                           gameMode === 2 ? '-' :
+                           gameMode === 3 ? '×' : '÷';
+
+            document.getElementById('questionText').textContent = `${nums[0]} ${operator} ${nums[1]} = ?`;
+
+            // Calculate correct answer
+            if (gameMode === 1) currentAnswer = nums[0] + nums[1];
+            if (gameMode === 2) currentAnswer = nums[0] - nums[1];
+            if (gameMode === 3) currentAnswer = nums[0] * nums[1];
+            if (gameMode === 4) currentAnswer = nums[0] / nums[1];
+
+            startTime = Date.now();
+        }
+
+        // Start game
+        document.getElementById('startButton').addEventListener('click', () => {
+            document.getElementById('setupSection').style.display = 'none';
+            document.getElementById('gameSection').style.display = 'block';
+            score = 0;
+            questionCount = 0;
+            times = [];
+            generateQuestion();
+            updateProgress();
+        });
+
+        // Submit answer
+        function submitAnswer() {
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            const endTime = Date.now();
+            times.push((endTime - startTime) / 1000);
+
+            if (userAnswer === currentAnswer) {
+                score++;
+            }
+
+            questionCount++;
+            document.getElementById('answerInput').value = '';
+
+            if (questionCount === totalQuestions) {
+                showResults();
+            } else {
+                generateQuestion();
+                updateProgress();
+            }
+        }
+
+        document.getElementById('submitAnswer').addEventListener('click', submitAnswer);
+        document.getElementById('answerInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitAnswer();
+        });
+
+        function updateProgress() {
+            document.getElementById('progress').textContent =
+                `Question ${questionCount + 1} of ${totalQuestions}`;
+        }
+
+        function showResults() {
+            document.getElementById('gameSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+
+            const accuracy = (score / totalQuestions) * 100;
+            const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
+
+            document.getElementById('scoreText').textContent =
+                `Score: ${score} out of ${totalQuestions}`;
+            document.getElementById('accuracyText').textContent =
+                `Accuracy: ${accuracy.toFixed(1)}%`;
+            document.getElementById('timeText').textContent =
+                `Average time: ${avgTime.toFixed(2)} seconds`;
+        }
+
+        // Play again
+        document.getElementById('playAgain').addEventListener('click', () => {
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('setupSection').style.display = 'block';
+            gameMode = null;
+            difficulty = null;
+            timesTable = null;
+            document.querySelectorAll('.mode-button, .difficulty-button')
+                .forEach(button => button.classList.remove('selected'));
+            document.getElementById('timesTableInput').value = '';
+            document.getElementById('startButton').disabled = true;
+        });
+    </script>
+</body>
 </html>

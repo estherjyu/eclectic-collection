@@ -5,12 +5,12 @@
     <style>
        body {
           font-family: Arial, sans-serif;
-          height: 100vh;
+          min-height: 100vh;
           margin: 0;
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: center;
+          padding: 40px 20px;
        }
        .menu-item {
           margin: 15px 0;
@@ -23,15 +23,46 @@
        a:hover {
           color: #666;
        }
-
        .back-button {
          font-size: 16px;
          margin-top: 30px;
+         border-bottom: 1px solid black;
+       }
+       .project-container {
+         width: 100%;
+         max-width: 800px;
+       }
+       .project-title {
+         font-size: 24px;
+         margin-bottom: 10px;
+       }
+       .project-description {
+         font-size: 16px;
+         color: #666;
+         margin-bottom: 20px;
+       }
+       .project-link {
+         display: inline-block;
+         background-color: #4CAF50;
+         color: white;
+         padding: 10px 20px;
+         border-radius: 4px;
+         margin-top: 10px;
+       }
+       .project-link:hover {
+         background-color: #45a049;
+         color: white;
        }
     </style>
   </head>
   <body>
-    <div class="menu-item"><a href="mental_math.html">mental math game</a></div>
+    <div class="project-container">
+      <div class="project-title">Mental Math Game</div>
+      <div class="project-description">
+        A web-based mental math practice game featuring addition, subtraction, multiplication, and division modes with varying difficulty levels.
+      </div>
+      <a href="mental-math.html" class="project-link">Play Game</a>
+    </div>
     <div class="back-button"><a href="menu.html">← back</a></div>
   </body>
 </html>
