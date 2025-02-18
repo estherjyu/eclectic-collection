@@ -139,7 +139,7 @@
         let timesTable = null;
         let score = 0;
         let questionCount = 0;
-        let totalQuestions = 5;
+        let totalQuestions = 10;
         let currentAnswer = null;
         let startTime = null;
         let times = [];
@@ -246,20 +246,21 @@
             const feedbackElement = document.getElementById('feedback');
             if (userAnswer === currentAnswer) {
                 score++;
-                feedbackElement.textContent = "Correct!";
+                feedbackElement.textContent = "Previous answer: Correct!";
                 feedbackElement.className = "feedback correct";
             } else {
-                feedbackElement.textContent = `Incorrect. The answer was ${currentAnswer}`;
+                feedbackElement.textContent = `Previous answer: Incorrect. The answer was ${currentAnswer}`;
                 feedbackElement.className = "feedback incorrect";
             }
             feedbackElement.style.display = "block";
 
-            questionCount++;
             document.getElementById('answerInput').value = '';
 
-            if (questionCount === totalQuestions) {
+            if (questionCount + 1 === totalQuestions) {
+                questionCount++;
                 showResults();
             } else {
+                questionCount++;
                 generateQuestion();
                 updateProgress();
             }
