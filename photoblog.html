@@ -137,6 +137,7 @@
     </style>
 </head>
 <body>
+
     <div id="sidebar">
         <h2>Photo Collections</h2>
         <nav>
@@ -175,33 +176,29 @@
     </div>
 
     <div id="main">
-        <div class="gallery-grid">
-            <!-- Example gallery items - replace src with your actual images -->
-            <div class="gallery-item">
-                <img src="/api/placeholder/400/300" alt="Nature 1">
-                <div class="caption">Spring Mountains</div>
-            </div>
-            <div class="gallery-item">
-                <img src="/api/placeholder/400/300" alt="Nature 2">
-                <div class="caption">Urban Landscape</div>
-            </div>
-            <div class="gallery-item">
-                <img src="/api/placeholder/400/300" alt="Nature 3">
-                <div class="caption">City Lights</div>
-            </div>
-            <div class="gallery-item">
-                <img src="/api/placeholder/400/300" alt="Nature 4">
-                <div class="caption">Forest Path</div>
-            </div>
-            <div class="gallery-item">
-                <img src="/api/placeholder/400/300" alt="Nature 5">
-                <div class="caption">Ocean Sunset</div>
-            </div>
-            <div class="gallery-item">
-                <img src="/api/placeholder/400/300" alt="Nature 6">
-                <div class="caption">Desert Views</div>
-            </div>
+      <script>
+    function filterGallery(category) {
+        const allPhotos = document.querySelectorAll('.gallery-item');
+        allPhotos.forEach(photo => {
+            if (photo.dataset.category === category || category === 'all') {
+                photo.style.display = 'block';
+            } else {
+                photo.style.display = 'none';
+            }
+        });
+    }
+    </script>
+
+    <div class="gallery-grid">
+        <div class="gallery-item" data-category="nature">
+            <img src="nature1.jpg" alt="Nature 1">
+        </div>
+        <div class="gallery-item" data-category="urban">
+            <img src="urban1.jpg" alt="Urban 1">
         </div>
     </div>
+    </div>
+
+
 </body>
 </html>
